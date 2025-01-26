@@ -8,6 +8,8 @@ import { Pencil } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Course } from "@prisma/client";
 
 import {
   Form,
@@ -18,12 +20,9 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 interface DescriptionFormProps {
-  initialData: {
-    description: string | undefined;
-  };
+  initialData: Course;
   courseId: string;
 }
 
@@ -40,7 +39,9 @@ const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      description: initialData.description || "",
+    },
   });
 
   const { isSubmitting, isValid } = form.formState;
