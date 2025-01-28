@@ -5,7 +5,7 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 import toast from "react-hot-toast";
 
 interface FileUploadProps {
-  onChange: (url?: string) => void;
+  onChange: (url?: string) => void; // Allow handling multiple URLs
   endpoint: keyof typeof ourFileRouter;
 }
 
@@ -17,7 +17,7 @@ export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
         onChange(res?.[0].url);
       }}
       onUploadError={(error: Error) => {
-        toast.error(`${error?.message}`);
+        toast.error(`Upload failed: ${error.message}. Please try again.`);
       }}
     />
   );

@@ -16,16 +16,16 @@ interface ImageFormProps {
   courseId: string;
 }
 
-const formSchema = z.object({
-  imageUrl: z.string().min(1, {
-    message: "Image is required",
-  }),
-});
-
 const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((current) => !current);
   const router = useRouter();
+
+  const formSchema = z.object({
+    imageUrl: z.string().min(1, {
+      message: "Image is required",
+    }),
+  });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -81,14 +81,13 @@ const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
               if (url) {
                 try {
                   await onSubmit({ imageUrl: url });
-                } catch (err) {
-                  console.error("Error submitting image.", err);
-                  toast.error("Something went wrong while uploading.");
+                } catch (error) {
+                  console.error("Error updating image URL:", error);
+                  toast.error("Something went wrong.");
                 }
               }
             }}
           />
-
           <div className="text-xs text-muted-foreground mt-4">
             16:9 aspect ratio recommended
           </div>

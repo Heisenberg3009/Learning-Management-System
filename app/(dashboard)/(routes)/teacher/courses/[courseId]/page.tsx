@@ -16,8 +16,11 @@ import PriceForm from "./_components/price-form";
 import AttachmentForm from "./_components/attachment-form";
 
 const courseIdPage = async ({ params }: { params: { courseId: string } }) => {
-  const { userId } = await auth();
+  if (!params || !params.courseId) {
+    throw new Error("Missing or invalid courseId in params");
+  }
 
+  const { userId } = await auth();
   if (!userId) {
     return redirect("/");
   }
@@ -35,15 +38,15 @@ const courseIdPage = async ({ params }: { params: { courseId: string } }) => {
     },
   });
 
+  if (!course) {
+    return redirect("/");
+  }
+
   const categories = await db.category.findMany({
     orderBy: {
       name: "asc",
     },
   });
-
-  if (!course) {
-    return redirect("/");
-  }
 
   const requiredFields = [
     course.title,
@@ -55,7 +58,6 @@ const courseIdPage = async ({ params }: { params: { courseId: string } }) => {
 
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
-
   const completionText = `(${completedFields}/${totalFields})`;
 
   return (
