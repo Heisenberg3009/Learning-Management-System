@@ -14,9 +14,11 @@ import ImageForm from "./_components/image-form";
 import CategoriesForm from "./_components/categories-form";
 import PriceForm from "./_components/price-form";
 import AttachmentForm from "./_components/attachment-form";
+import ChapterForm from "./_components/chapters-form";
 
 const courseIdPage = async ({ params }: { params: { courseId: string } }) => {
-  if (!params || !params.courseId) {
+  const { courseId } = params;
+  if (!courseId) {
     throw new Error("Missing or invalid courseId in params");
   }
 
@@ -28,8 +30,14 @@ const courseIdPage = async ({ params }: { params: { courseId: string } }) => {
   const course = await db.course.findUnique({
     where: {
       id: params.courseId,
+      userId,
     },
     include: {
+      chapters: {
+        orderBy: {
+          position: "asc",
+        },
+      },
       attachments: {
         orderBy: {
           createdAt: "desc",
@@ -54,6 +62,7 @@ const courseIdPage = async ({ params }: { params: { courseId: string } }) => {
     course.imageUrl,
     course.price,
     course.categoryId,
+    course.chapters.some((chapter) => chapter.isPublished),
   ];
 
   const totalFields = requiredFields.length;
@@ -94,7 +103,7 @@ const courseIdPage = async ({ params }: { params: { courseId: string } }) => {
               <IconBadge icon={ListChecks} />
               <h2 className="text-xl">Course Chapters</h2>
             </div>
-            <div></div>
+            <ChapterForm initialData={course} courseId={course.id} />
           </div>
           <div className="flex items-center gap-x-2">
             <IconBadge icon={CircleDollarSign} />
