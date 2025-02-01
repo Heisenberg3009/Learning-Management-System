@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import ChaptersList from "./chapters-list";
 
 interface ChapterFormProps {
   initialData: Course & { chapters: Chapter[] };
@@ -53,6 +54,21 @@ const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
       router.refresh();
     } catch {
       toast.error("Something went wrong.");
+    }
+  };
+
+  const onReorder = async (updateData: { id: string; position: number }[]) => {
+    try {
+      setIsUpdating(true);
+      await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
+        list: updateData,
+      });
+      toast.success("Chapter reordered.");
+      router.refresh();
+    } catch {
+      toast.error("Something went wrong.");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -108,6 +124,11 @@ const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
           )}
         >
           {!initialData.chapters.length && "No chapters"}
+          <ChaptersList
+            onEdit={() => {}}
+            onReorder={onReorder}
+            items={initialData.chapters || []}
+          />
         </div>
       )}
       {!isCreating && (
