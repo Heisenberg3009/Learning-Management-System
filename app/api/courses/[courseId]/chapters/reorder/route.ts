@@ -21,7 +21,7 @@ export async function PUT(
     if (!ownCourse) {
       return new NextResponse("Unauthorized", { status: 500 });
     }
-    for (let item of list) {
+    for (const item of list) {
       await db.chapter.update({
         where: { id: item.id },
         data: { position: item.position },
