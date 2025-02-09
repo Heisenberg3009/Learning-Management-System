@@ -11,14 +11,12 @@ import { useRouter } from "next/navigation";
 interface CourseActionsProps {
   disabled: boolean;
   courseId: string;
-  chapterId: string;
   isPublished: boolean;
 }
 
 const CourseActions = ({
   disabled,
   courseId,
-  chapterId,
   isPublished,
 }: CourseActionsProps) => {
   const router = useRouter();
@@ -27,15 +25,11 @@ const CourseActions = ({
     try {
       setIsLoading(true);
       if (isPublished) {
-        await axios.patch(
-          `/api/courses/${courseId}/chapters/${chapterId}/unpublish`,
-        );
-        toast.success("Chapter unpublished successfully.");
+        await axios.patch(`/api/courses/${courseId}/unpublish`);
+        toast.success("Course unpublished successfully.");
       } else {
-        await axios.patch(
-          `/api/courses/${courseId}/chapters/${chapterId}/publish`,
-        );
-        toast.success("Chapter published successfully.");
+        await axios.patch(`/api/courses/${courseId}/publish`);
+        toast.success("Course published successfully.");
       }
       router.refresh();
     } catch {
@@ -47,12 +41,12 @@ const CourseActions = ({
   const onDelete = async () => {
     try {
       setIsLoading(true);
-      await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
-      toast.success("Chapter deleted successfully.");
+      await axios.delete(`/api/courses/${courseId}`);
+      toast.success("Course deleted successfully.");
       router.refresh();
-      router.push(`/teacher/courses/${courseId}`);
+      router.push(`/teacher/courses`);
     } catch {
-      toast.error("Error deleting chapter");
+      toast.error("Error deleting course");
     } finally {
       setIsLoading(false);
     }

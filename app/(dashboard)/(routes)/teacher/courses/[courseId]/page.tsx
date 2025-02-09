@@ -16,7 +16,7 @@ import PriceForm from "./_components/price-form";
 import AttachmentForm from "./_components/attachment-form";
 import ChapterForm from "./_components/chapters-form";
 import Banner from "@/components/banner";
-import CourseActions from "@/app/(dashboard)/(routes)/teacher/courses/[courseId]/_components/course-actions";
+import CourseActions from "./_components/course-actions";
 
 const courseIdPage = async ({ params }: { params: { courseId: string } }) => {
   const { courseId } = params;
