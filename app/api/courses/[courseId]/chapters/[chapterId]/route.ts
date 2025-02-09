@@ -3,7 +3,10 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import Mux from "@mux/mux-node";
 
-const mux = new Mux(process.env.MUX_TOKEN_ID!, process.env.MUX_TOKEN_SECRET!);
+const mux = new Mux({
+  tokenId: process.env.MUX_TOKEN_ID!,
+  tokenSecret: process.env.MUX_TOKEN_SECRET!,
+});
 
 export async function DELETE(
   req: Request,
@@ -68,8 +71,7 @@ export async function PATCH(
 ) {
   try {
     const { userId } = await auth();
-    const { courseId } = params;
-    const { isPublished, ...values } = await req.json();
+    const { ...values } = await req.json();
 
     console.log("Received values: ", values);
 
@@ -103,7 +105,7 @@ export async function PATCH(
 
       const asset = await mux.video.assets.create({
         input: values.videoUrl,
-        playback_policy: "public",
+        playback_policy: ["public"],
         test: false,
       });
 
