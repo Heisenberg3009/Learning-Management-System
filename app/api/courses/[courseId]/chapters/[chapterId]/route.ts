@@ -20,7 +20,7 @@ export async function DELETE(
     if (!ownCourse) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    const chapter = await db.course.findUnique({
+    const chapter = await db.chapter.findUnique({
       where: { id: params.chapterId, courseId: params.courseId },
     });
     if (!chapter) {
@@ -38,13 +38,24 @@ export async function DELETE(
         });
       }
     }
-    const deletedChapter = await db.muxData.delete({
+    const deletedChapter = await db.chapter.delete({
       where: { id: params.chapterId },
     });
 
-    const publishedChaptersInCourse = await db.muxData.findMany({
+    const publishedChaptersInCourse = await db.chapter.findMany({
       where: { courseId: params.courseId, isPublished: true },
     });
+    if (!publishedChaptersInCourse.length) {
+      await db.course.update({
+        where: {
+          id: params.courseId,
+        },
+        data: {
+          isPublished: false,
+        },
+      });
+    }
+    return NextResponse.json(deletedChapter);
   } catch (error) {
     console.log("[COURSES_CHAPTER_ID_DELETE]", error);
     return new NextResponse("Internal Server Error", { status: 500 });
