@@ -1,7 +1,8 @@
 "use client";
 import { UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
+import SearchInput from "./search-input";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 
@@ -10,12 +11,12 @@ const NavbarRoutes = () => {
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isPlayerPage = pathname?.includes("/chapter");
-  const isSearchPage = pathname === "/chapter";
+  const isSearchPage = pathname === "/search";
 
   return (
     <>
       {isSearchPage && (
-        <div>
+        <div className="hidden md:block">
           <SearchInput />
         </div>
       )}
