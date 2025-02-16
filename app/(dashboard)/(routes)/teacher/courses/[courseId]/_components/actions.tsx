@@ -15,11 +15,7 @@ interface CourseActionsProps {
   isPublished: boolean;
 }
 
-const CourseActions = ({
-  disabled,
-  courseId,
-  isPublished,
-}: CourseActionsProps) => {
+const Actions = ({ disabled, courseId, isPublished }: CourseActionsProps) => {
   const router = useRouter();
   const confetti = useConfettiStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -73,4 +69,4 @@ const CourseActions = ({
     </div>
   );
 };
-export default CourseActions;
+export default Actions;
